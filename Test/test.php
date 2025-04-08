@@ -46,3 +46,9 @@ print "<b>CompanyClient</b><br>";
 $testClient1 = new CompanyClient('Juan', 'zesxrdcfvygbuhnijmo', '.ñl,pkmjonihbugvyfcdtrse', 12345678, 12345678, 2021, 'VIP', 10, 'EMPRESA');
 print $testClient1->getContactData();
 print "<br><br>";
+
+print "<br><br>";
+print "<b>CompanyClient</b><br>";
+$testClient1 = new CompanyClient('Juan', 'zesxrdcfvygbuhnijmo', '.ñl,pkmjonihbugvyfcdtrse', 12345678, 12345678, 2021, 'VIP', 10, 'EMPRESA');
+print $testClient1->getContactData();
+print "<br><br>";
