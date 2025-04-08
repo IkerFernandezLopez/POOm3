@@ -3,7 +3,8 @@ include_once 'Person.php';
 
 class Client extends Person
 {
-    protected string $tipo, $CantCompras;
+    protected string $tipo;
+    protected int|float $CantCompras;
 
     public function __construct($name, $email, $address, $phone, $id, $age, $tipo, $CantCompras)
     {
@@ -27,7 +28,7 @@ class Client extends Person
         return $this->CantCompras;
     }
 
-    public function setCantCompras(string $CantCompras): void
+    public function setCantCompras($CantCompras): void
     {
         $this->CantCompras = $CantCompras;
     }

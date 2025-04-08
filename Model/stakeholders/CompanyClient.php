@@ -1,8 +1,9 @@
 <?php
-
-class CompanyClient extends Client
+include_once 'stakeholders.php';
+class CompanyClient extends Client implements Stakeholders
 {
     protected string $companyType;
+
     public function __construct($name, $email, $address, $phone, $id, $age, $tipo, $CantCompras, $companyType)
     {
         //! funciones importadas del padre
@@ -20,5 +21,23 @@ class CompanyClient extends Client
     {
         return "Nombre: " . parent::getName() . "<br>Direccion: " . parent::getAddress() . "<br>Num Tel. " . parent::getPhone() . "<br>Tipo Cliente: " . $this->tipo . "<br>Cant. Compra: " . $this->CantCompras . "<br>Tipo de Empresa: " . $this->companyType;
     }
+
+    public function getCode(): string
+    {
+        return $this->name;
+    }
+    public function getData(): string
+    {
+        return $this->age;
+    }
+    public function getDetails(): string
+    {
+        return $this->phone;
+    }
+    public function getPrice(): int|float
+    {
+        return $this->CantCompras;
+    }
+
 
 }
