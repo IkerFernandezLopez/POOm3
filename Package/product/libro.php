@@ -1,14 +1,19 @@
 <?php
+declare(strict_types=1);
 include_once '../exceptions/exceptions.php';
 include_once '../Package/product/product.php';
-class Libro extends Product
-{
-    protected string $author;
-    protected int $pages;
+include_once '../Package/product/Storable.php';
 
-    public function __construct($name, $price, $author, $pages)
+
+class Libro extends Product implements Storable
+{
+    protected string $author, $location;
+    protected int $pages, $stock;
+    protected float $width;
+
+    public function __construct($name, $price, $author, $pages, $location, $stock, $details, $width)
     {
-        parent::__construct($name, $price);
+        parent::__construct($name, $price, $details);
 
         $errorMessage = "";
         if ($author === "") {
@@ -20,6 +25,21 @@ class Libro extends Product
             $errorMessage .= "Número de páginas inválido. ";
         } else {
             $this->pages = $pages;
+        }
+        if ($location === "") {
+            $errorMessage .= "Ubicación inválida. ";
+        } else {
+            $this->location = $location;
+        }
+        if ($stock <= 0) {
+            $errorMessage .= "Stock inválido. ";
+        } else {
+            $this->stock = $stock;
+        }
+        if ($width <= 0) {
+            $errorMessage .= "Ancho inválido. ";
+        } else {
+            $this->width = $width;
         }
     }
     public function getAuthor()
@@ -37,6 +57,21 @@ class Libro extends Product
     public function setPages($pages)
     {
         $this->pages = $pages;
+    }
+
+    public function getLocation(): string
+    {
+        return "Ubicación del libro: " . $this->location;
+    }
+
+    public function getStock(): int
+    {
+        return $this->stock;
+    }
+
+    public function getWidth(): float
+    {
+        return $this->width;
     }
 
     // La función getDescription() devuelve una descripción del libro, incluyendo su nombre, precio, autor y número de páginas, pero esta puede ser distinta en otras subclases de Product.

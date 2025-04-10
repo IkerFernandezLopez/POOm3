@@ -1,15 +1,17 @@
 <?php
+declare(strict_types=1);
 include_once '../exceptions/exceptions.php';
 include_once '../Package/product/product.php';
+
 
 class Software extends Product
 {
     protected string $version;
     protected string $license;
 
-    public function __construct($name, $price, $version, $license)
+    public function __construct($name, $price, $version, $license, $details)
     {
-        parent::__construct($name, $price);
+        parent::__construct($name, $price, $details);
         $errorMessage = "";
         if ($version === "") {
             $errorMessage .= "Versión inválida. ";
