@@ -5,40 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        div {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            transition: transform 1.5s ease-in-out;
-        }
-
-        #subtitle {
-            display: block;
-            font-size: 0.5em;
-            margin-top: 0.5em;
-            color: gray;
-            text-align: center;
-        }
-
-        #Content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .active {
-            opacity: 0;
-        }
-    </style>
 </head>
 
 <body>
     <div id="Animation">
-        <h1>Programación orientada a objetos
-            <span id="subtitle">(CLICK ANYWHERE TO START)</span>
-        </h1>
+        <h1>Programación orientada a objetos</h1>
     </div>
     <main id="Content" class="active">
         <section>
@@ -47,19 +18,23 @@
                     <h2>SoftLearning</h2>
                     <input type="submit">
                 </form>
-
+            </article>
+            <article>
+                <form action="../Test/test2.php" method="post">
+                    <h2>SoftLearning2</h2>
+                    <input type="submit">
+                </form>
+            </article>
+            <article>
+                <form action="../Test/Control.php" method="post">
+                    <h2>Examen</h2>
+                    <input type="submit">
+                </form>
             </article>
         </section>
     </main>
 
-    <script>
-        document.addEventListener("click", function () {
-            let main = document.getElementById("Animation");
-            let content = document.getElementById("Content");
-            content.classList.remove("active");
-            main.style.transform = "translateY(-100vh)";
-        }, { once: true }); // Esto asegura que solo se ejecute una vez
-    </script>
+
 </body>
 
 </html>
