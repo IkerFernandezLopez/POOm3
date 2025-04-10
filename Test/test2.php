@@ -4,15 +4,6 @@ include_once '../Package/product/libro.php';
 include_once '../Package/product/curso.php';
 include_once '../Package/product/software.php';
 
-print "<b>Producto Test</b><br>";
-try {
-    $product = new Product('Libro', 100);
-    print $product->getName() . "<br>";
-    print $product->getPrice() . "<br>";
-} catch (Exception $e) {
-    print "Error: " . $e->getMessage();
-}
-
 print "<br><b>Libro Test</b><br>";
 try {
     $libro = new libro('Libro', 100, 'Autor', 200);
@@ -20,6 +11,7 @@ try {
     print $libro->getPrice() . "<br>";
     print $libro->getAuthor() . "<br>";
     print $libro->getPages() . "<br>";
+    print $libro->getDescription() . "<br>";
 } catch (Exception $e) {
     print "Error: " . $e->getMessage();
 }
@@ -31,6 +23,7 @@ try {
     print $curso->getPrice() . "<br>";
     print $curso->getInstructor() . "<br>";
     print $curso->getDuration() . "<br>";
+    print $curso->getDescription() . "<br>";
 } catch (Exception $e) {
     print "Error: " . $e->getMessage();
 }
@@ -42,6 +35,7 @@ try {
     print $software->getPrice() . "<br>";
     print $software->getVersion() . "<br>";
     print $software->getLicense() . "<br>";
+    print $software->getDescription() . "<br>";
 } catch (Exception $e) {
     print "Error: " . $e->getMessage();
 }

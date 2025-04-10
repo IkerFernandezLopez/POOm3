@@ -10,8 +10,17 @@ class Curso extends Product
     public function __construct($name, $price, $instructor, $duration)
     {
         parent::__construct($name, $price);
-        $this->instructor = $instructor;
-        $this->duration = $duration;
+        $errorMessage = "";
+        if ($instructor === "") {
+            $errorMessage .= "Instructor inválido. ";
+        } else {
+            $this->instructor = $instructor;
+        }
+        if ($duration <= 0) {
+            $errorMessage .= "Duración inválida. ";
+        } else {
+            $this->duration = $duration;
+        }
     }
     public function getInstructor()
     {
@@ -28,5 +37,11 @@ class Curso extends Product
     public function setDuration($duration)
     {
         $this->duration = $duration;
+    }
+
+    // La función getDescription() devuelve una descripción del curso, incluyendo su nombre, precio, instructor y duración.
+    public function getDescription()
+    {
+        return "Curso: " . $this->name . ", Precio: " . $this->price . ", Instructor: " . $this->instructor . ", Duración: " . $this->duration;
     }
 }

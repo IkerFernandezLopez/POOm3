@@ -10,8 +10,17 @@ class Software extends Product
     public function __construct($name, $price, $version, $license)
     {
         parent::__construct($name, $price);
-        $this->version = $version;
-        $this->license = $license;
+        $errorMessage = "";
+        if ($version === "") {
+            $errorMessage .= "Versión inválida. ";
+        } else {
+            $this->version = $version;
+        }
+        if ($license === "") {
+            $errorMessage .= "Licencia inválida. ";
+        } else {
+            $this->license = $license;
+        }
     }
     public function getVersion()
     {
@@ -28,5 +37,10 @@ class Software extends Product
     public function setLicense($license)
     {
         $this->license = $license;
+    }
+
+    public function getDescription()
+    {
+        return "Software: " . $this->name . ", Precio: " . $this->price . ", Versión: " . $this->version . ", Licencia: " . $this->license;
     }
 }
