@@ -119,4 +119,59 @@ class Checker
         }
         return 0;
     }
+
+
+    // -------------------------------------------------------------------------
+
+    public static function checkEmail(string $email): int
+    {
+        $regex = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+        if (preg_match($regex, $email)) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+
+    public static function checkDNI(string $dni): int
+    {
+        $regex = '/^[0-9]{8}[A-Z]$/';
+        if (preg_match($regex, $dni)) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+
+    public static function checkISBN(string $isbn): int
+    {
+        $regex = '/^(978|979)\d{10}$/';
+        if (preg_match($regex, $isbn)) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+
+    public static function checkIpAddress($Ip): bool
+    {
+        $regexp = '/^\d{1,3}[.]\d{1,3}[.]\d{1,3}[.]\d{1,3}$/';
+
+        if (preg_match($regexp, $Ip)) {
+            $Ip = preg_split('/[.]/', $Ip);
+            $valid = true;
+            foreach ($Ip as $octet) {
+                if ((int) $octet < 0 || (int) $octet > 255) {
+                    $valid = false;
+                    break;
+                }
+            }
+            return $valid;
+        }
+        return false;
+    }
+
+
+
+
 }
