@@ -17,7 +17,7 @@ include_once '../Exception/DataException.php';
 // }
 // print "<br><br><br>";
 
-$date = '31-12-2000';
+$date = '30-02-2020';
 
 print "Date Validation<br>";
 print "The input is : {$date}<br>";

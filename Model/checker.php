@@ -178,22 +178,25 @@ class Checker
         if (preg_match($regexp, $date)) {
             $date = preg_split('/[-]/', $date);
 
-            $day = (int) $date[0];
-            if ($day > 31 || $day < 1) {
-                throw new DataException("Day is out of range");
-            }
-            $month = (int) $date[1];
-            if ($month > 12 || $month < 1) {
-                throw new DataException("Month is out of range");
-            }
-
             $year = (int) $date[2];
             if ($year > 2025 || $year < 1900) {
                 throw new DataException("Year is out of range");
             }
 
+            $month = (int) $date[1];
+            if ($month > 12 || $month < 1) {
+                throw new DataException("Month is out of range");
+            }
+
+            $day = (int) $date[0];
+            if ($day > 31 || $day < 1) {
+                throw new DataException("Day is out of range");
+            }
+
             if (checkdate($month, $day, $year)) {
                 return true;
+            } else {
+                throw new DataException("Date is not valid, make sure the day is valid for the month");
             }
         } else {
             throw new DataException("Date format is incorrect");
