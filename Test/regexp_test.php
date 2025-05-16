@@ -1,12 +1,37 @@
 <?php
 
 include_once '../Model/checker.php';
-$ip = '211.111.211.111';
+include_once '../Exception/DataException.php';
 
-if (checker::checkIpAddress($ip)) {
-    print $ip . " is Valid IP address";
-} else {
-    print "Invalid IP address";
+
+// $ip = '211.111.211.111';
+
+// print "IP Address Validation <br>";
+// print "The input is : " . $ip . "<br>";
+// print "----------------------------------<br>";
+
+// try {
+//     checker::checkIpAddress($ip);
+// } catch (DataException $e) {
+//     print "Exception: " . $e->getMessage();
+// }
+// print "<br><br><br>";
+
+$date = '31-12-2000';
+
+print "Date Validation<br>";
+print "The input is : {$date}<br>";
+
+print "Recommended format: <b>dd-mm-yyyy</b><br>";
+print "---------------------------------- <br>";
+
+try {
+    if (checker::checkDate($date)) {
+        print "The date is valid<br>";
+    } else {
+        print "The date is invalid<br>";
+    }
+} catch (DataException $e) {
+    print "Exception: " . $e->getMessage();
 }
 
-$date = '2023-10-01';
