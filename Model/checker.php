@@ -202,8 +202,4 @@ class Checker
             throw new DataException("Date format is incorrect");
         }
     }
-
-
-    // entre 4 y no 100 O divisible por 400
-
 }

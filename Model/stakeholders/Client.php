@@ -3,24 +3,29 @@ include_once 'Person.php';
 
 class Client extends Person
 {
-    protected string $tipo;
+    protected DateTime $joined_at;
     protected int|float $CantCompras;
 
-    public function __construct($name, $email, $address, $phone, $id, $age, $tipo, $CantCompras)
+    public function __construct($name, $email, $address, $phone, $id, $age, $joined_at, $CantCompras)
     {
         parent::__construct($name, $email, $address, $phone, $id, $age);
-        $this->tipo = $tipo;
+
+        if (checker::checkDate($joined_at) !== 0) {
+            throw new DataException("Fecha de ingreso inválida");
+        } else {
+            $this->joined_at = new DateTime($joined_at);
+        }
         $this->CantCompras = $CantCompras;
     }
 
-    public function getTipo(): string
+    public function getJoinedAt(): DateTime
     {
-        return $this->tipo;
+        return $this->joined_at;
     }
 
-    public function setTipo(string $tipo): void
+    public function setJoinedAt(DateTime $joined_at): void
     {
-        $this->tipo = $tipo;
+        $this->joined_at = $joined_at;
     }
 
     public function getCantCompras(): string
@@ -35,6 +40,6 @@ class Client extends Person
 
     public function getContactData(): string
     {
-        return "Nombre: " . parent::getName() . "<br>Direccion: " . parent::getAddress() . "<br>Num Tel. " . parent::getPhone() . "<br>Tipo Cliente: " . $this->tipo . "<br>Cant. Compra: " . $this->CantCompras;
+        return "Nombre: " . parent::getName() . "<br>Direccion: " . parent::getAddress() . "<br>Num Tel. " . parent::getPhone() . "<br>Tipo Cliente: " . $this->joined_at . "<br>Cant. Compra: " . $this->CantCompras;
     }
 }
