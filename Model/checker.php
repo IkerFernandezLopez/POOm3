@@ -3,7 +3,6 @@
 class Checker
 {
 
-    //----------------------------------GENERAL----------------------------------
     public static function isNull($var): bool
     {
         if ($var === null) {
@@ -12,7 +11,6 @@ class Checker
         return false;
     }
 
-    //----------------------------------STRINGS----------------------------------
     public static function isEmpty($var): bool
     {
         if (trim($var) === "") {
@@ -53,7 +51,6 @@ class Checker
         };
     }
 
-    //----------------------------------INTEGERS----------------------------------
     public static function isEmptyInt(int $var): bool
     {
         return $var === 0;
@@ -78,7 +75,6 @@ class Checker
         return 0;
     }
 
-    //----------------------------------ARRAY----------------------------------
     public static function isEmptyArray(array $var): bool
     {
         return count($var) === 0;
@@ -103,7 +99,6 @@ class Checker
         return 0;
     }
 
-    //----------------------------------BOOL----------------------------------
     public static function isEmptyBool(bool $var): bool
     {
         return $var === false;
@@ -121,7 +116,6 @@ class Checker
     }
 
 
-    // -------------------------------------------------------------------------
 
     public static function checkEmail(string $email): int
     {
@@ -145,13 +139,10 @@ class Checker
 
     public static function checkISBN(string $isbn): int
     {
-        $regex = '/^(978|979)\d{10}$/';
-        if (preg_match($regex, $isbn)) {
-            return 0;
-        } else {
-            return -1;
-        }
+        $regex = '/^(\d{9}[0-9Xx]$)|(^(978|979)\d{10}$)/';
+        return preg_match($regex, $isbn) ? 0 : -1;
     }
+
 
     public static function checkIpAddress($Ip): bool
     {
@@ -173,33 +164,55 @@ class Checker
 
     public static function checkDate(string $date)
     {
-        $regexp = '/^\d{2}[-]\d{2}[-]\d{4}$/';
+        $regexp = '/^\d{4}[-]\d{2}[-]\d{2}( \d{2}:\d{2}:\d{2})?$/';
 
         if (preg_match($regexp, $date)) {
-            $date = preg_split('/[-]/', $date);
+            // Split date and optional time
+            $parts = explode(' ', $date);
+            $dateParts = explode('-', $parts[0]);
 
-            $year = (int) $date[2];
+            $year = (int) $dateParts[0];
             if ($year > 2025 || $year < 1900) {
                 throw new DataException("Year is out of range");
             }
 
-            $month = (int) $date[1];
+            $month = (int) $dateParts[1];
             if ($month > 12 || $month < 1) {
                 throw new DataException("Month is out of range");
             }
 
-            $day = (int) $date[0];
+            $day = (int) $dateParts[2];
             if ($day > 31 || $day < 1) {
                 throw new DataException("Day is out of range");
             }
 
-            if (checkdate($month, $day, $year)) {
-                return true;
-            } else {
+            if (!checkdate($month, $day, $year)) {
                 throw new DataException("Date is not valid, make sure the day is valid for the month");
             }
+
+            if (isset($parts[1])) {
+                // Validate time part HH:MM:SS
+                $timeParts = explode(':', $parts[1]);
+                if (count($timeParts) !== 3) {
+                    throw new DataException("Time format is incorrect");
+                }
+
+                [$hour, $minute, $second] = $timeParts;
+                if ($hour < 0 || $hour > 23) {
+                    throw new DataException("Hour is out of range");
+                }
+                if ($minute < 0 || $minute > 59) {
+                    throw new DataException("Minute is out of range");
+                }
+                if ($second < 0 || $second > 59) {
+                    throw new DataException("Second is out of range");
+                }
+            }
+
+            return true;
         } else {
             throw new DataException("Date format is incorrect");
         }
     }
+
 }

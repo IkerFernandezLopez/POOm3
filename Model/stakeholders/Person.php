@@ -1,8 +1,8 @@
 <?php
 abstract class Person
 {
-    protected string $name, $email, $address;
-    protected int $phone, $id, $age;
+    protected string $name, $email, $address, $phone;
+    protected int $id, $age;
 
     public function __construct($name, $email, $address, $phone, $id, $age)
     {
@@ -36,7 +36,7 @@ abstract class Person
         return $this->address;
     }
 
-    public function getPhone(): int
+    public function getPhone(): string
     {
         return $this->phone;
     }
@@ -66,7 +66,7 @@ abstract class Person
         $this->address = $address;
     }
 
-    public function setPhone(int $phone): void
+    public function setPhone(string $phone): void
     {
         $this->phone = $phone;
     }

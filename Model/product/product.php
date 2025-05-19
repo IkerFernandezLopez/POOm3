@@ -1,73 +1,104 @@
 <?php
 declare(strict_types=1);
-include_once '../exceptions/exceptions.php';
-include_once '../Package/product/Marketable.php';
-// La clase Product implementa la interfaz Marketable, lo que significa que debe implementar los métodos definidos en la interfaz.
-// al ser una clase abstracta, esta no puede ser iniciada como sus hijos, esta actua como una interfaz o plantilla para los hijos.
 
+include_once '../Exception/BuildException.php';
+include_once 'Marketable.php';
 
-
+/**
+ * Clase abstracta Product: plantilla para todos los productos vendibles.
+ * Ya no impone restricción sobre el nombre; acepta cualquier string.
+ */
 abstract class Product implements Marketable
 {
-    protected string $name, $details;
-    protected int $price;
+    protected string $name;
+    protected float  $price;
+    protected string $details;
 
-    public function __construct($name, $price, $details)
+    /**
+     * @param string $name     Nombre del producto (libre, p.ej. "PHP Básico").
+     * @param float  $price    Precio del producto (debe ser > 0).
+     * @param string $details  Texto descriptivo (no puede estar vacío).
+     *
+     * @throws BuildException  Si falla la validación de precio o detalles.
+     */
+    public function __construct(string $name, float $price, string $details)
     {
-
-        // Validar el nombre y el precio del producto y devuelve un mensaje de error en caso de encontrar.
         $errorMessage = "";
 
-        if ($name === "Libro" || $name === "Software" || $name === "Curso") {
-            $this->name = $name;
-        } else {
-            $errorMessage .= "Este Producto no está disponible. ";
-        }
+        // 1) Aceptamos cualquier nombre (antes restringía a "Libro"/"Software"/"Curso").
+        $this->name = $name;
 
-        if ($price <= 0) {
-            $errorMessage .= "Precio inválido. ";
+        // 2) Validar que el precio sea mayor que cero.
+        if ($price <= 0.0) {
+            $errorMessage .= "Precio inválido (debe ser mayor que 0). ";
         } else {
             $this->price = $price;
         }
 
-        if ($details === "") {
-            $errorMessage .= "Detalles inválidos. ";
+        // 3) Validar que los detalles no estén vacíos.
+        if (trim($details) === "") {
+            $errorMessage .= "Detalles inválidos (campo vacío). ";
         } else {
             $this->details = $details;
         }
 
-        // Si hay un mensaje de error, lanzamos una excepción que hace que el conhstructor no se ejecute, asi que no se crea el objeto.
+        // 4) Si se acumuló algún mensaje de error, lanzamos BuildException.
         if ($errorMessage !== "") {
-            throw new Exception($errorMessage);
+            throw new BuildException($errorMessage);
         }
     }
 
+    /**
+     * Devuelve el nombre del producto.
+     */
     public function getName(): string
     {
         return $this->name;
     }
+
+    /**
+     * Devuelve el precio del producto (float).
+     */
     public function getPrice(): float
     {
         return $this->price;
     }
+
+    /**
+     * Devuelve los detalles descriptivos del producto.
+     */
     public function getDetails(): string
     {
         return $this->details;
     }
 
-    public function setName($name)
+    /**
+     * Permite modificar el nombre del producto.
+     */
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
-    public function setPrice($price)
+
+    /**
+     * Permite modificar el precio (float). Si quieres volver a validar (e.g. > 0),
+     * puedes agregar lógica adicional aquí antes de asignar.
+     */
+    public function setPrice(float $price): void
     {
         $this->price = $price;
     }
-    public function setDetails($details)
+
+    /**
+     * Permite modificar los detalles del producto.
+     */
+    public function setDetails(string $details): void
     {
         $this->details = $details;
     }
 
-    // Funcion abstracta para obtener la descripción del producto y que se puede editar en cada subclase, como si fuera una interfaz pero desde el padre
-    public abstract function getDescription();
+    /**
+     * Las subclases deben implementar este método devolviendo una descripción.
+     */
+    public abstract function getDescription(): string;
 }

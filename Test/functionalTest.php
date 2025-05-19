@@ -8,7 +8,7 @@ include_once '../Package/product/software.php';
 
 print "<br><b>Libro Test</b><br>";
 try {
-    $libro = new libro('Libro', 100, 'Autor', 200, 'Ubicación', 10, 'Detalles', 1.5);
+    $libro = new libro('Libro', 100, 'Autor', 200, 'Ubicación', 10, 'Detalles', '1234567890', '2023-01-01 12:30:00', '2023-01-01 12:30:00', 2.5);
     print $libro->getName() . "<br>";
     print $libro->getPrice() . "<br>";
     print $libro->getAuthor() . "<br>";
