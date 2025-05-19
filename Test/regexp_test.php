@@ -16,22 +16,26 @@ $bookAdapter = new MySQLBookAdapter();
 //     $libro = new Libro(
 //         'Libro' . random_int(1, 1000),
 //         random_int(10, 100),
-
 //         'Juan Pérez',
 //         200,
 //         'Barcelona',
-//         random_int(1, 20),
+//         '77777',
 //         'Buen libro introductorio a PHP',
-//         strval(random_int(1000000000, 9999999999)),
+//         '978-3-16-148410-0',
 //         '2004-11-15 12:30:00',
 //         new DateTime('now'),
 //         rand(100, 500) / 100
 //     );
 //     $bookAdapter->addBook($libro);
 //     echo "Libro insertado correctamente.<br>";
+// } catch (TypeError $e) {
+//     echo "Error de tipo en la construcción del libro: Asegurate de introducir los tipos de valores correctos <br>";
 // } catch (BuildException $e) {
-//     echo "Error al insertar libro: " . $e->getMessage() . "<br>";
+//     echo "Error de validación: " . $e->getMessage() . "<br>";
+// } catch (Exception $e) {
+//     echo "Error inesperado: " . $e->getMessage() . "<br>";
 // }
+
 
 
 
@@ -102,9 +106,13 @@ $bookAdapter = new MySQLBookAdapter();
 //             $case['width'] ?? (rand(100, 500) / 100)
 //         );
 //         echo "Libro insertado correctamente.<br>";
-//     } catch (BuildException $e) {
-//         echo "Error al insertar libro: " . $e->getMessage() . "<br>";
-//     }
+//     } catch (TypeError $e) {
+//     echo "Error de tipo en la construcción del libro: Asegurate de introducir los tipos de valores correctos <br>";
+// } catch (BuildException $e) {
+//     echo "Error de validación: " . $e->getMessage() . "<br>";
+// } catch (Exception $e) {
+//     echo "Error inesperado: " . $e->getMessage() . "<br>";
+// }
 // }
 
 
@@ -207,13 +215,12 @@ $bookAdapter = new MySQLBookAdapter();
 
 // ---- TEST DELETE BOOK
 
-
-try {
-    $bookAdapter->deleteBook('AAA');
-    echo "Libro eliminado correctamente.";
-} catch (ServiceException $e) {
-    echo "Error al eliminar libro: " . $e->getMessage();
-}
+// try {
+//     $bookAdapter->deleteBook(22);
+//     echo "Libro eliminado correctamente.";
+// } catch (ServiceException $e) {
+//     echo "Error al eliminar libro: " . $e->getMessage();
+// }
 
 
 
@@ -328,4 +335,88 @@ $clientAdapter = new MysqlClientAdapter();
 //     echo "Cliente eliminado correctamente.";
 // } catch (ServiceException $e) {
 //     echo "Error al eliminar cliente: " . $e->getMessage();
+// }
+
+
+
+
+// $clientesData = [
+//     [
+//         // TIENE QUE ENTRAR
+//         'id' => 1,
+//         'name' => 'Ana Gómez',
+//         'email' => 'ana.gomez@example.com',
+//         'address' => 'Calle Real 45',
+//         'phone' => '+34 600 123 456',
+//         'age' => 28,
+//         'registrationDate' => new DateTime('2022-01-01'),
+//         'level' => 3,
+//     ],
+//     [
+//         // NO TIENE QUE ENTRAR
+//         'id' => 2,
+//         'name' => '123456',
+//         'email' => 'correo@invalido',
+//         'address' => '',
+//         'phone' => 999999999,
+//         'age' => -5,
+//         'registrationDate' => 'noesfecha',
+//         'level' => 100,
+//     ],
+//     [
+//         // NO TIENE QUE ENTRAR
+//         'id' => 3,
+//         'name' => '@@@###',
+//         'email' => 'user@@example..com',
+//         'address' => 'Calle!@#$%',
+//         'phone' => '+34 (666) 555-444',
+//         'age' => 'treinta',
+//         'registrationDate' => new DateTime(),
+//         'level' => 0,
+//     ],
+//     [
+//         // TIENE QUE ENTRAR
+//         'id' => 4,
+//         'name' => 'Laura Fernández',
+//         'email' => 'laura.fernandez@example.com',
+//         'address' => 'Paseo de la Castellana 100',
+//         'phone' => '+34 622 111 222',
+//         'age' => 35,
+//         'registrationDate' => new DateTime('2023-06-01'),
+//         'level' => 5,
+//     ],
+//     [
+//         // NO TIENE QUE ENTRAR
+//         'id' => 5,
+//         'name' => null,
+//         'email' => null,
+//         'address' => null,
+//         'phone' => null,
+//         'age' => null,
+//         'registrationDate' => null,
+//         'level' => null,
+//     ],
+// ];
+
+// foreach ($clientesData as $i => $data) {
+//     try {
+//         $cliente = new Client(
+//             $data['id'],
+//             $data['name'],
+//             $data['email'],
+//             $data['address'],
+//             $data['phone'],
+//             $data['age'],
+//             $data['registrationDate'],
+//             $data['level'],
+//         );
+//         $clientAdapter->addClient($cliente);
+//         echo "Cliente '{$data['name']}' insertado correctamente.<br>";
+//     } catch (BuildException $e) {
+//         echo "BuildException en cliente #{$i} ('{$data['name']}'?): " . $e->getMessage() . "<br>";
+//     } catch (TypeError $e) {
+//         echo "TypeError: {$data['name']} " . $e->getMessage() . "<br>";
+//     } catch (Exception $e) {
+//         echo "Excepción general : " . $e->getMessage() . "<br>";
+//     }
 // }

@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
-include_once '../Package/product/product.php';
-include_once '../Package/product/libro.php';
-include_once '../Package/product/curso.php';
-include_once '../Package/product/software.php';
+include_once '../Model/product/product.php';
+include_once '../Model/product/libro.php';
+include_once '../Model/stakeholders/Client.php';
 
 
 print "<br><b>Libro Test</b><br>";
@@ -20,26 +19,16 @@ try {
     print "Error: " . $e->getMessage();
 }
 
-print "<br><b>Curso Test</b><br>";
+print "<br><b>Client Test</b><br>";
 try {
-    $curso = new curso('Curso', 100, 'Instructor', 30, 'Detalles');
-    print $curso->getName() . "<br>";
-    print $curso->getPrice() . "<br>";
-    print $curso->getInstructor() . "<br>";
-    print $curso->getDuration() . "<br>";
-    print $curso->getDescription() . "<br>";
-} catch (Exception $e) {
-    print "Error: " . $e->getMessage();
-}
-
-print "<br><b>Software Test</b><br>";
-try {
-    $software = new software('Software', 100, '1.0', 'Licencia', 'Detalles');
-    print $software->getName() . "<br>";
-    print $software->getPrice() . "<br>";
-    print $software->getVersion() . "<br>";
-    print $software->getLicense() . "<br>";
-    print $software->getDescription() . "<br>";
+    $client = new Client(4, 'Susi', 'Susi@gmail.com', 'Susissadress 99', '692 09 12 22', 22, new DateTime('now'), 2);
+    print $client->getName() . "<br>";
+    print $client->getEmail() . "<br>";
+    print $client->getAddress() . "<br>";
+    print $client->getPhone() . "<br>";
+    print $client->getAge() . "<br>";
+    print $client->getJoinedAt()->format('Y-m-d H:i:s') . "<br>";
+    print $client->getCantCompras() . "<br>";
 } catch (Exception $e) {
     print "Error: " . $e->getMessage();
 }

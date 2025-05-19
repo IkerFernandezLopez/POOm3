@@ -31,7 +31,7 @@ class MySQLBookAdapter extends MySQLAdapter
         }
     }
 
-    public function deleteBook(  $id): bool
+    public function deleteBook($id): bool
     {
         if (!is_int($id)) {
             throw new ServiceException("El id del libro debe ser un número entero");

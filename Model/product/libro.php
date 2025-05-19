@@ -1,10 +1,10 @@
 <?php
-declare(strict_types=1);
 
 include_once __DIR__ . '/product.php';
 include_once __DIR__ . '/Storable.php';
 include_once '../Exception/BuildException.php';
 include_once '../Exception/DataException.php';
+include_once '../Model/checker.php';
 
 class Libro extends Product implements Storable
 {
@@ -33,37 +33,30 @@ class Libro extends Product implements Storable
     ) {
         parent::__construct($name, $price, $details);
 
-        $errores = [];
-
         if (!is_string($author) || trim($author) === '' || !preg_match('/^[\p{L}\s\-\.]{2,100}$/u', $author)) {
-            $errores[] = "Autor inválido (debe tener entre 2 y 100 caracteres, solo letras, espacios, guiones o puntos).";
-        } else {
-            $this->author = htmlspecialchars(trim($author), ENT_QUOTES, 'UTF-8');
+            throw new BuildException("Autor inválido: debe tener entre 2 y 100 caracteres, y contener solo letras, espacios, guiones o puntos.");
         }
+        $this->author = htmlspecialchars(trim($author), ENT_QUOTES, 'UTF-8');
 
         if (!is_int($pages) || $pages <= 0 || $pages > 10000) {
-            $errores[] = "Número de páginas inválido (debe ser entre 1 y 10,000).";
-        } else {
-            $this->pages = $pages;
+            throw new BuildException("Número de páginas inválido: debe estar entre 1 y 10,000.");
         }
+        $this->pages = $pages;
 
         if (!is_string($location) || trim($location) === '' || strlen($location) > 255) {
-            $errores[] = "Ubicación inválida (texto obligatorio, máx 255 caracteres).";
-        } else {
-            $this->location = htmlspecialchars(trim($location), ENT_QUOTES, 'UTF-8');
+            throw new BuildException("Ubicación inválida: texto obligatorio, máximo 255 caracteres.");
         }
+        $this->location = htmlspecialchars(trim($location), ENT_QUOTES, 'UTF-8');
 
         if (!is_int($stock) || $stock < 0 || $stock > 1000000) {
-            $errores[] = "Stock inválido (debe ser ≥ 0 y razonable).";
-        } else {
-            $this->stock = $stock;
+            throw new BuildException("Stock inválido: debe ser un número entero ≥ 0 y razonable.");
         }
+        $this->stock = $stock;
 
         if (!is_string($isbn) || !preg_match('/^[\d\-]{10,17}$/', $isbn)) {
-            $errores[] = "ISBN inválido (formato esperado: 10 a 17 dígitos y guiones).";
-        } else {
-            $this->isbn = htmlspecialchars(trim($isbn), ENT_QUOTES, 'UTF-8');
+            throw new BuildException("ISBN inválido: debe tener entre 10 y 17 caracteres, solo números y guiones.");
         }
+        $this->isbn = htmlspecialchars(trim($isbn), ENT_QUOTES, 'UTF-8');
 
         if ($dataPublish instanceof DateTime) {
             $this->dataPublish = $dataPublish;
@@ -72,12 +65,10 @@ class Libro extends Product implements Storable
                 Checker::checkDate($dataPublish);
                 $this->dataPublish = new DateTime($dataPublish);
             } catch (DataException $e) {
-                $errores[] = "Fecha de publicación inválida: " . $e->getMessage();
-                $this->dataPublish = new DateTime();
+                throw new DataException("Fecha de publicación inválida: " . $e->getMessage());
             }
         } else {
-            $errores[] = "Fecha de publicación inválida: tipo no soportado.";
-            $this->dataPublish = new DateTime();
+            throw new BuildException("Fecha de publicación inválida: tipo no soportado.");
         }
 
         if ($dateDisponible instanceof DateTime) {
@@ -87,25 +78,17 @@ class Libro extends Product implements Storable
                 Checker::checkDate($dateDisponible);
                 $this->dateDisponible = new DateTime($dateDisponible);
             } catch (DataException $e) {
-                $errores[] = "Fecha de disponibilidad inválida: " . $e->getMessage();
-                $this->dateDisponible = new DateTime();
+                throw new DataException("Fecha de disponibilidad inválida: " . $e->getMessage());
             }
         } else {
-            $errores[] = "Fecha de disponibilidad inválida: tipo no soportado.";
-            $this->dateDisponible = new DateTime();
+            throw new BuildException("Fecha de disponibilidad inválida: tipo no soportado.");
         }
 
-        if (!is_numeric($width) || $width <= 0 || $width > 1000) {
-            $errores[] = "Ancho inválido (debe ser > 0 y razonable).";
-        } else {
-            $this->width = floatval($width);
+        if (!is_numeric($width) || floatval($width) <= 0 || floatval($width) > 1000) {
+            throw new BuildException("Ancho inválido: debe ser mayor a 0 y razonable.");
         }
+        $this->width = floatval($width);
 
-
-
-        if (!empty($errores)) {
-            throw new BuildException(implode(' ', $errores));
-        }
 
     }
 
