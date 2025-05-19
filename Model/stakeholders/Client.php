@@ -13,10 +13,8 @@ class Client extends Person
     {
         parent::__construct($name, $email, $address, $phone, $id, $age);
 
-        // Validación y asignación de joined_at con fallback seguro
         $this->joined_at = $this->validateJoinedAt($joined_at);
 
-        // Validación de CantCompras
         $this->CantCompras = $this->validateCantCompras($CantCompras);
     }
 
@@ -36,7 +34,6 @@ class Client extends Person
                 throw new Exception("Fecha de ingreso inválida: tipo no soportado");
             }
         } catch (Exception $e) {
-            // Fallback a fecha actual si hay error
             error_log("Error en fecha joined_at: " . $e->getMessage());
         }
     }
@@ -50,7 +47,6 @@ class Client extends Person
         return $value;
     }
 
-    // Resto de los métodos permanecen igual...
     public function getJoinedAt(): DateTime
     {
         return $this->joined_at;
