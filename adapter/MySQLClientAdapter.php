@@ -32,8 +32,17 @@ class MysqlClientAdapter extends MySQLAdapter
         }
     }
 
-    public function deleteClient(int $id): bool
+    public function deleteClient($id): bool
     {
+        if (!is_int($id)) {
+            throw new ServiceException("El id del cliente debe ser un número entero");
+        }
+        if ($id <= 0) {
+            throw new ServiceException("El id del cliente no puede ser menor o igual a 0");
+        }
+        if ($this->getClientById($id) == null) {
+            throw new ServiceException("No se encontró el cliente con id = $id");
+        }
         try {
             return $this->writeQuery("DELETE FROM clients WHERE id = $id;");
         } catch (Exception $e) {

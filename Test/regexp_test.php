@@ -205,6 +205,19 @@ $bookAdapter = new MySQLBookAdapter();
 
 
 
+// ---- TEST DELETE BOOK
+
+
+try {
+    $bookAdapter->deleteBook('AAA');
+    echo "Libro eliminado correctamente.";
+} catch (ServiceException $e) {
+    echo "Error al eliminar libro: " . $e->getMessage();
+}
+
+
+
+
 
 // TEST CLIENTS
 
@@ -306,4 +319,13 @@ $clientAdapter = new MysqlClientAdapter();
 //     $client = $clientAdapter->updateClientCantCompras(35, 20);
 // } catch (Throwable $e) {
 //     echo "Error capturado en el campo Name: " . $e->getMessage();
+// }
+
+
+// TEST DELETE CLIENT
+// try {
+//     $clientAdapter->deleteClient('aaa');
+//     echo "Cliente eliminado correctamente.";
+// } catch (ServiceException $e) {
+//     echo "Error al eliminar cliente: " . $e->getMessage();
 // }
