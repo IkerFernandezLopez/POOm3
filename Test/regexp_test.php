@@ -16,6 +16,7 @@ $bookAdapter = new MySQLBookAdapter();
 //     $libro = new Libro(
 //         'Libro' . random_int(1, 1000),
 //         random_int(10, 100),
+
 //         'Juan Pérez',
 //         200,
 //         'Barcelona',
@@ -31,6 +32,7 @@ $bookAdapter = new MySQLBookAdapter();
 // } catch (BuildException $e) {
 //     echo "Error al insertar libro: " . $e->getMessage() . "<br>";
 // }
+
 
 
 

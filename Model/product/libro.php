@@ -35,37 +35,36 @@ class Libro extends Product implements Storable
 
         $errores = [];
 
-        if (trim($author) === '') {
-            $errores[] = "Autor inválido.";
+        if (!is_string($author) || trim($author) === '' || !preg_match('/^[\p{L}\s\-\.]{2,100}$/u', $author)) {
+            $errores[] = "Autor inválido (debe tener entre 2 y 100 caracteres, solo letras, espacios, guiones o puntos).";
         } else {
-            $this->author = $author;
+            $this->author = htmlspecialchars(trim($author), ENT_QUOTES, 'UTF-8');
         }
 
-        if ($pages <= 0) {
-            $errores[] = "Número de páginas inválido.";
+        if (!is_int($pages) || $pages <= 0 || $pages > 10000) {
+            $errores[] = "Número de páginas inválido (debe ser entre 1 y 10,000).";
         } else {
             $this->pages = $pages;
         }
 
-        if (trim($location) === '') {
-            $errores[] = "Ubicación inválida.";
+        if (!is_string($location) || trim($location) === '' || strlen($location) > 255) {
+            $errores[] = "Ubicación inválida (texto obligatorio, máx 255 caracteres).";
         } else {
-            $this->location = $location;
+            $this->location = htmlspecialchars(trim($location), ENT_QUOTES, 'UTF-8');
         }
 
-        if ($stock < 0) {
-            $errores[] = "Stock inválido (debe ser ≥ 0).";
+        if (!is_int($stock) || $stock < 0 || $stock > 1000000) {
+            $errores[] = "Stock inválido (debe ser ≥ 0 y razonable).";
         } else {
             $this->stock = $stock;
         }
 
-        if (trim($isbn) === '') {
-            $errores[] = "ISBN inválido.";
+        if (!is_string($isbn) || !preg_match('/^[\d\-]{10,17}$/', $isbn)) {
+            $errores[] = "ISBN inválido (formato esperado: 10 a 17 dígitos y guiones).";
         } else {
-            $this->isbn = $isbn;
+            $this->isbn = htmlspecialchars(trim($isbn), ENT_QUOTES, 'UTF-8');
         }
 
-        // Validación de dataPublish
         if ($dataPublish instanceof DateTime) {
             $this->dataPublish = $dataPublish;
         } elseif (is_string($dataPublish)) {
@@ -74,14 +73,13 @@ class Libro extends Product implements Storable
                 $this->dataPublish = new DateTime($dataPublish);
             } catch (DataException $e) {
                 $errores[] = "Fecha de publicación inválida: " . $e->getMessage();
-                $this->dataPublish = new DateTime(); // fallback para evitar fatal error
+                $this->dataPublish = new DateTime();
             }
         } else {
             $errores[] = "Fecha de publicación inválida: tipo no soportado.";
             $this->dataPublish = new DateTime();
         }
 
-        // Validación de dateDisponible
         if ($dateDisponible instanceof DateTime) {
             $this->dateDisponible = $dateDisponible;
         } elseif (is_string($dateDisponible)) {
@@ -97,11 +95,13 @@ class Libro extends Product implements Storable
             $this->dateDisponible = new DateTime();
         }
 
-        if ($width <= 0) {
-            $errores[] = "Ancho inválido (debe ser > 0).";
+        if (!is_numeric($width) || $width <= 0 || $width > 1000) {
+            $errores[] = "Ancho inválido (debe ser > 0 y razonable).";
         } else {
-            $this->width = $width;
+            $this->width = floatval($width);
         }
+
+
 
         if (!empty($errores)) {
             throw new BuildException(implode(' ', $errores));

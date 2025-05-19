@@ -16,8 +16,13 @@ abstract class Product implements Marketable
     {
         $errorMessage = "";
 
-
-        $this->name = $name;
+        if (trim($name) === "") {
+            $errorMessage .= "Nombre inválido (campo vacío). ";
+        } elseif (!preg_match('/^[\p{L}\d\s]+$/u', $name)) {
+            $errorMessage .= "Nombre inválido (solo se permiten letras, números y espacios, sin símbolos especiales). ";
+        } else {
+            $this->name = $name;
+        }
 
         if ($price <= 0.0) {
             $errorMessage .= "Precio inválido (debe ser mayor que 0). ";
@@ -27,6 +32,8 @@ abstract class Product implements Marketable
 
         if (trim($details) === "") {
             $errorMessage .= "Detalles inválidos (campo vacío). ";
+        } elseif (!preg_match('/^[\p{L}\s]+$/u', $details)) {
+            $errorMessage .= "Detalles inválidos (solo se permiten letras y espacios, sin números ni símbolos). ";
         } else {
             $this->details = $details;
         }
