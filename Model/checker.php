@@ -119,6 +119,10 @@ class Checker
 
     public static function checkEmail(string $email): int
     {
+        if (preg_match("/[\'\"\\\;]/", $email)) {
+            return -1;
+        }
+
         $regex = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
         if (preg_match($regex, $email)) {
             return 0;
@@ -126,6 +130,7 @@ class Checker
             return -1;
         }
     }
+
 
     public static function checkDNI(string $dni): int
     {

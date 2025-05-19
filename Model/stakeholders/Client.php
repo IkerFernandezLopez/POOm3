@@ -47,6 +47,8 @@ class Client extends Person
         return $value;
     }
 
+
+
     public function getJoinedAt(): DateTime
     {
         return $this->joined_at;
