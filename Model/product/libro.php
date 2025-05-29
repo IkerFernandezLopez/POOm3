@@ -8,55 +8,60 @@ include_once '../Model/checker.php';
 
 class Libro extends Product implements Storable
 {
+    protected int $id;
     protected string $author;
     protected int $pages;
     protected string $location;
     protected int $stock;
     protected string $isbn;
     protected float $width;
-
+    protected string $details;
     protected DateTime $dataPublish;
     protected DateTime $dateDisponible;
 
     public function __construct(
-        string $name,
+        $id,
+        $name,
         float $price,
-        string $author,
-        int $pages,
-        string $location,
-        int $stock,
-        string $details,
-        string $isbn,
+        $author,
+        $pages,
+        $location,
+        $stock,
+        $details,
+        $isbn,
         DateTime|string $dataPublish,
         DateTime|string $dateDisponible,
-        float $width
+        $width
     ) {
         parent::__construct($name, $price, $details);
 
-        if (!is_string($author) || trim($author) === '' || !preg_match('/^[\p{L}\s\-\.]{2,100}$/u', $author)) {
+        if (!is_int($id) || $id <= 0) {
+            throw new BuildException("ID inválido: debe ser un número entero positivo.");
+        }
+
+        if (!is_string($author) || Checker::checkString($author, 2) !== 0 || !preg_match('/^[\p{L}\s\-\.]{2,100}$/u', $author)) {
             throw new BuildException("Autor inválido: debe tener entre 2 y 100 caracteres, y contener solo letras, espacios, guiones o puntos.");
         }
-        $this->author = htmlspecialchars(trim($author), ENT_QUOTES, 'UTF-8');
 
         if (!is_int($pages) || $pages <= 0 || $pages > 10000) {
             throw new BuildException("Número de páginas inválido: debe estar entre 1 y 10,000.");
         }
-        $this->pages = $pages;
 
-        if (!is_string($location) || trim($location) === '' || strlen($location) > 255) {
+        if (!is_string($location) || Checker::isEmpty($location) || strlen($location) > 255) {
             throw new BuildException("Ubicación inválida: texto obligatorio, máximo 255 caracteres.");
         }
-        $this->location = htmlspecialchars(trim($location), ENT_QUOTES, 'UTF-8');
 
-        if (!is_int($stock) || $stock < 0 || $stock > 1000000) {
-            throw new BuildException("Stock inválido: debe ser un número entero ≥ 0 y razonable.");
+        if (!is_int($stock) || $stock < 0 || $stock > 10000) {
+            throw new BuildException("Stock inválido: debe ser un número entero entre 0 y 10000.");
         }
-        $this->stock = $stock;
 
-        if (!is_string($isbn) || !preg_match('/^[\d\-]{10,17}$/', $isbn)) {
-            throw new BuildException("ISBN inválido: debe tener entre 10 y 17 caracteres, solo números y guiones.");
+        if (!is_string($details) || Checker::isEmpty($details) || strlen($details) > 1000 || !preg_match('/^[\p{L}\s]+$/u', $details)) {
+            throw new BuildException("Detalles inválidos: solo letras y espacios, obligatorio, máximo 1000 caracteres.");
         }
-        $this->isbn = htmlspecialchars(trim($isbn), ENT_QUOTES, 'UTF-8');
+
+        if (!is_string($isbn) || Checker::checkISBN($isbn) !== 0) {
+            throw new BuildException("ISBN inválido: debe empezar por 978 o 979 y tener 13 dígitos numéricos.");
+        }
 
         if ($dataPublish instanceof DateTime) {
             $this->dataPublish = $dataPublish;
@@ -87,8 +92,16 @@ class Libro extends Product implements Storable
         if (!is_numeric($width) || floatval($width) <= 0 || floatval($width) > 1000) {
             throw new BuildException("Ancho inválido: debe ser mayor a 0 y razonable.");
         }
-        $this->width = floatval($width);
 
+
+        $this->id = $id;
+        $this->author = trim($author);
+        $this->pages = $pages;
+        $this->location = trim($location);
+        $this->stock = $stock;
+        $this->isbn = trim($isbn);
+        $this->width = floatval($width);
+        $this->details = trim($details);
 
     }
 
@@ -118,6 +131,11 @@ class Libro extends Product implements Storable
     public function getPages(): int
     {
         return $this->pages;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function setAuthor(string $author): void
@@ -170,6 +188,7 @@ class Libro extends Product implements Storable
         $diff = $this->dataPublish->diff($this->dateDisponible);
         return $diff->days;
     }
+
 
     public function getIntervals(int $days): array
     {

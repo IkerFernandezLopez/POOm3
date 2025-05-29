@@ -144,8 +144,11 @@ class Checker
 
     public static function checkISBN(string $isbn): int
     {
-        $regex = '/^(\d{9}[0-9Xx]$)|(^(978|979)\d{10}$)/';
-        return preg_match($regex, $isbn) ? 0 : -1;
+        $isbnDigits = str_replace('-', '', $isbn);
+        if (!preg_match('/^(978|979)\d{10}$/', $isbnDigits)) {
+            return -1;
+        }
+        return 0;
     }
 
 
@@ -172,7 +175,7 @@ class Checker
         $regexp = '/^\d{4}[-]\d{2}[-]\d{2}( \d{2}:\d{2}:\d{2})?$/';
 
         if (preg_match($regexp, $date)) {
-            // Split date and optional time
+
             $parts = explode(' ', $date);
             $dateParts = explode('-', $parts[0]);
 

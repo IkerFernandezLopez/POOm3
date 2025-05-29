@@ -7,41 +7,48 @@ include_once 'Marketable.php';
 
 abstract class Product implements Marketable
 {
-    protected string $name;
+    protected $name;
     protected float $price;
     protected string $details;
 
-
-    public function __construct(string $name, float $price, string $details)
+    public function __construct($name, $price, $details)
     {
-        $errorMessage = "";
 
+        if (!is_string($name)) {
+            throw new BuildException("Nombre inválido (debe ser una cadena de texto).");
+        }
         if (trim($name) === "") {
-            $errorMessage .= "Nombre inválido (campo vacío). ";
-        } elseif (!preg_match('/^[\p{L}\d\s]+$/u', $name)) {
-            $errorMessage .= "Nombre inválido (solo se permiten letras, números y espacios, sin símbolos especiales). ";
-        } else {
-            $this->name = $name;
+            throw new BuildException("Nombre inválido (campo vacío).");
+        }
+
+        if (!preg_match('/^[\p{L}\d\s]+$/u', $name)) {
+            throw new BuildException("Nombre inválido (solo se permiten letras, números y espacios, sin símbolos especiales).");
+        }
+
+        $this->name = $name;
+
+
+        if (!is_numeric($price) || !is_float($price)) {
+            throw new BuildException("Precio inválido (debe ser un número válido).");
         }
 
         if ($price <= 0.0) {
-            $errorMessage .= "Precio inválido (debe ser mayor que 0). ";
-        } else {
-            $this->price = $price;
+            throw new BuildException("Precio inválido (debe ser mayor que 0).");
         }
+
+        $this->price = $price;
 
         if (trim($details) === "") {
-            $errorMessage .= "Detalles inválidos (campo vacío). ";
-        } elseif (!preg_match('/^[\p{L}\s]+$/u', $details)) {
-            $errorMessage .= "Detalles inválidos (solo se permiten letras y espacios, sin números ni símbolos). ";
-        } else {
-            $this->details = $details;
+            throw new BuildException("Detalles inválidos (campo vacío).");
         }
 
-        if ($errorMessage !== "") {
-            throw new BuildException($errorMessage);
+        if (!preg_match('/^[\p{L}\s]+$/u', $details)) {
+            throw new BuildException("Detalles inválidos (solo se permiten letras y espacios, sin números ni símbolos).");
         }
+
+        $this->details = $details;
     }
+
 
     public function getName(): string
     {

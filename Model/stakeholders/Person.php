@@ -6,6 +6,28 @@ abstract class Person
 
     public function __construct($name, $email, $address, $phone, $id, $age)
     {
+        if (!is_string($name) || empty(trim($name))) {
+            throw new InvalidArgumentException("Name must be a non-empty string.");
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidArgumentException("Invalid email format.");
+        }
+        if (!is_string($address) || empty(trim($address))) {
+            throw new InvalidArgumentException("Address must be a non-empty string.");
+        }
+        if (!is_string($phone) || empty(trim($phone))) {
+            throw new InvalidArgumentException("Phone must be a non-empty string.");
+        }
+        if (!is_int($id) || $id <= 0) {
+            (int) $id;
+            if ($id % 1 != 0) {
+                throw new InvalidArgumentException("ID must be a positive integer.");
+            }
+        }
+        if (!is_int($age) || $age < 0) {
+            throw new InvalidArgumentException("Age must be a non-negative integer.");
+        }
+
         $this->name = $name;
         $this->email = $email;
         $this->address = $address;

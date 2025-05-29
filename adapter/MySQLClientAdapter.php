@@ -53,7 +53,8 @@ class MysqlClientAdapter extends MySQLAdapter
     public function addClient(Client $u): bool
     {
         try {
-            return $this->writeQuery("INSERT INTO clients (name, email, address, phone, age, joined_at, CantCompras) VALUES (
+            return $this->writeQuery("INSERT INTO clients (id, name, email, address, phone, age, joined_at, CantCompras) VALUES (
+                " . $u->getId() . ",
                 '" . $u->getName() . "',
                 '" . $u->getEmail() . "',
                 '" . $u->getAddress() . "',
@@ -82,13 +83,16 @@ class MysqlClientAdapter extends MySQLAdapter
         if (strlen($name) > 100) {
             throw new ServiceException("El nombre del cliente no puede tener más de 100 caracteres");
         }
+        // Verificar existencia del cliente
+        $this->getClientById($id);
+
         try {
             if (
                 $this->writeQuery(
                     "UPDATE clients SET name = '" . $name . "' WHERE id = $id;"
                 )
             ) {
-                echo "Nombre del cliente actualizado exitosamente.\n";
+                print "Nombre del cliente actualizado exitosamente.<br>";
                 return true;
             }
         } catch (Exception $e) {
@@ -110,9 +114,11 @@ class MysqlClientAdapter extends MySQLAdapter
         if (strlen($email) > 255) {
             throw new ServiceException("El email del cliente no puede tener más de 100 caracteres");
         }
+        $this->getClientById($id);
+
         try {
             if ($this->writeQuery("UPDATE clients SET email = '" . $email . "' WHERE id = $id;")) {
-                echo "Email del cliente actualizado exitosamente.\n";
+                print "Email del cliente actualizado exitosamente.<br>";
                 return true;
             }
             return false;
@@ -135,9 +141,11 @@ class MysqlClientAdapter extends MySQLAdapter
         if (strlen($address) > 255) {
             throw new ServiceException("La dirección del cliente no puede tener más de 255 caracteres");
         }
+        $this->getClientById($id);
+
         try {
             if ($this->writeQuery("UPDATE clients SET address = '" . $address . "' WHERE id = $id;")) {
-                echo "Dirección del cliente actualizada exitosamente.\n";
+                print "Dirección del cliente actualizada exitosamente.<br>";
                 return true;
             }
             return false;
@@ -163,9 +171,11 @@ class MysqlClientAdapter extends MySQLAdapter
         if (strlen($phone) < 7) {
             throw new ServiceException("El teléfono del cliente no puede tener menos de 7 caracteres");
         }
+        $this->getClientById($id);
+
         try {
             if ($this->writeQuery("UPDATE clients SET phone = '" . $phone . "' WHERE id = $id;")) {
-                echo "Teléfono del cliente actualizado exitosamente.\n";
+                print "Teléfono del cliente actualizado exitosamente.<br>";
                 return true;
             }
             return false;
@@ -185,9 +195,11 @@ class MysqlClientAdapter extends MySQLAdapter
         if ($age < 18) {
             throw new ServiceException("La edad del cliente no puede ser menor a 18");
         }
+        $this->getClientById($id);
+
         try {
             if ($this->writeQuery("UPDATE clients SET age = " . $age . " WHERE id = $id;")) {
-                echo "Edad del cliente actualizada exitosamente.\n";
+                print "Edad del cliente actualizada exitosamente.<br>";
                 return true;
             }
             return false;
@@ -213,10 +225,11 @@ class MysqlClientAdapter extends MySQLAdapter
         if (!($joinedAt instanceof DateTime)) {
             throw new ServiceException("La fecha de ingreso debe ser un objeto DateTime o un string válido");
         }
+        $this->getClientById($id);
 
         try {
             if ($this->writeQuery("UPDATE clients SET joined_at = '" . $joinedAt->format('Y-m-d H:i:s') . "' WHERE id = $id;")) {
-                echo "Fecha de ingreso del cliente actualizada exitosamente.\n";
+                print "Fecha de ingreso del cliente actualizada exitosamente.<br>";
                 return true;
             }
             return false;
@@ -224,7 +237,6 @@ class MysqlClientAdapter extends MySQLAdapter
             throw new ServiceException("Error al actualizar la fecha de ingreso del cliente: " . $e->getMessage());
         }
     }
-
 
     public function updateClientCantCompras(int $id, $cantCompras): bool
     {
@@ -234,10 +246,11 @@ class MysqlClientAdapter extends MySQLAdapter
         if ($cantCompras < 0) {
             throw new ServiceException("La cantidad de compras del cliente no puede ser negativa");
         }
+        $this->getClientById($id);
 
         try {
             if ($this->writeQuery("UPDATE clients SET CantCompras = " . $cantCompras . " WHERE id = $id;")) {
-                echo "Cantidad de compras del cliente actualizada exitosamente.\n";
+                print "Cantidad de compras del cliente actualizada exitosamente.<br>";
                 return true;
             }
             return false;
